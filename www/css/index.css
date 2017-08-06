@@ -1,0 +1,137 @@
+/*******tic-tac-toe******/
+#tic-tac-toe #game td {text-align:center; padding:0px; margin-bottom:20px; margin-left:20px; width:60px; color:#fff; height:60px; line-height:60px; font-size:40px; }
+#tic-tac-toe #game td.disable{background-color: #d3d3d3;}
+#tic-tac-toe #game {float:left; padding:0; clear:both}
+#tic-tac-toe { position: absolute;top: 20%;left: 35%;}
+.spacer{
+    height:20px;
+}
+.login{
+    width: 200px;
+    top: 45%;
+    position: absolute;
+    left: 50%;
+    margin-left: -100px;
+    margin-top: -50px;
+}  
+.biddingArea{
+    width: 200px;
+    top: 80%;
+    position: absolute;
+    left: 40%;
+}
+#scoreCard{
+    margin-left: 10px;
+    margin-top: 20px;
+    margin-right: 10px;
+}
+#player1{
+    float: left;
+}
+#player2{
+    float: right;
+}
+#player1_Name{
+    width: 100px;
+}
+#player2_Name{
+    width: 100px;
+}
+.err{
+    font-size: 12px;
+    height:15px;
+
+}
+#newGame{
+    width:120px;
+    position: relative;
+    left: 25%;
+}
+.halfspacer{
+    height:10px;
+}
+.blink{
+  -moz-animation-duration: 800ms;
+  -moz-animation-name: blink;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-direction: alternate;
+  
+  -webkit-animation-duration: 800ms;
+  -webkit-animation-name: blink;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+  
+  animation-duration: 800ms;
+  animation-name: blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+
+}
+#console {
+  position:relative;
+  text-align: center;
+  font-size: 20px;
+  margin-left: 20px;
+}
+#console1 {
+  position:relative;
+  text-align: center;
+  font-size: 20px;
+}
+#bidCard{
+    margin-top: 20px
+}
+.playerBid{
+    width:95px;
+}
+.playerBidText{
+    font-size: 10px;
+}
+@-moz-keyframes blink {
+  from {
+    opacity: 1;
+  }
+  
+  to {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes blink {
+  from {
+    opacity: 1;
+  }
+  
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  
+  to {
+    opacity: 0;
+  }
+}
+@media screen and (max-width: 420px) {
+#tic-tac-toe #game td {
+        text-align:center; 
+        padding:0px; 
+        margin-bottom:20px; 
+        margin-left:20px; 
+        width:60px; 
+        color:#fff; 
+        height:60px; 
+        line-height:60px; 
+        font-size:40px; 
+    }
+#tic-tac-toe { position: absolute;top: 20%;left: 15%;}  
+}
+
+ /*user login*/
+
+
+/*******tic-tac-toe END******/
