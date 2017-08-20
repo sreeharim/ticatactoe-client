@@ -131,6 +131,16 @@
 #tic-tac-toe { position: absolute;top: 20%;left: 15%;}  
 }
 
+#connectToUser{
+    margin:30px;
+    
+
+}
+#reqScreen{
+  margin-top: 20%;
+  text-align: center;
+}
+
  /*user login*/
 
 

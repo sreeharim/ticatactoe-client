@@ -10,11 +10,12 @@ var app = angular.module("tttApp",[])
 					$scope.validMove =false;
 					$scope.isBiddingTime =false;
 					$scope.isBidSubmitted=false;
+					$scope.connectToUser = false;
 					$scope.myBid='';
 					$scope.mySubBid='';
 					$scope.oppSubtBid='';
 					$scope.message = "Waiting for an opponent...";
-					$scope.socket = io.connect('http://192.168.0.4:3000');
+					$scope.socket =io.connect('http://192.168.0.4:3000');
 					$scope.name="";
 					$scope.opponentConnected = false;
 					$scope.opponentDisConnected = false;
@@ -24,6 +25,9 @@ var app = angular.module("tttApp",[])
 					$scope.invalidUsrMsg= '';
 					$scope.bidEnded= false;
 					$scope.gameOver = false;
+					$scope.reqScreen= false;
+					$scope.reqMsg ='';
+					$scope.users=[];
 					$scope.socket.on('registered user',function(data){
 								console.log(data);
 								$scope.loggedIn = true;
@@ -33,7 +37,24 @@ var app = angular.module("tttApp",[])
 								$scope.gameBoard = data;
 								 $scope.$apply();
 								});
-					
+					$scope.socket.on('update users',function(data){
+								for(var d in data)
+									if(data[d].name == $scope.name){
+										data.splice(d,1);
+										break;
+									}
+								$scope.users = data;
+								if($scope.users.length == 0)	
+									$scope.message = "No users online :("
+								else
+									$scope.message = "Choose a player";
+								 $scope.$apply();
+								});
+					$scope.socket.on('show users',function(data){
+								//$scope.message = "Choose a player";
+								$scope.connectToUser = true;
+								 $scope.$apply();
+								});
 					$scope.socket.on('opponent connected',function(data){
 								 console.log(data);
 								 $scope.opponentConnected = true;
@@ -109,7 +130,16 @@ var app = angular.module("tttApp",[])
 						$scope.oppSubtBid=data.lostBid;
 						$scope.message = 'You won Bid';
 						$scope.$apply();
-					});					
+					});	
+					$scope.socket.on('request game',function(data){
+						$scope.reqScreen= true;
+						$scope.connectToUser = false;
+						$scope.reqMsg = data+' requests a game.'
+						$scope.message = '';
+						$scope.$apply();
+						//$scope.message = 'You won Bid';
+					});	
+
 					$scope.submitChange = function(row,key) {
 							$scope.validMove = false;
         					$scope.gameBoard = $scope.updateGameBoard($scope.gameBoard,row,key,$scope.value);
@@ -142,6 +172,12 @@ var app = angular.module("tttApp",[])
     				$scope.submitBid = function(){
     					$scope.socket.emit('submit bid',$scope.myBid);
     					$scope.isBidSubmitted = true;
+    				}
+    				$scope.sendGameReq =function(name){
+    					$scope.socket.emit('send req',name);
+    					$scope.connectToUser=false;
+    					$scope.message = "Requesting "+name+" for a game..."
+    					//$scope.reqScreen =true;
     				}
     				function clearBoard(){
     					for(var row in $scope.gameBoard){
