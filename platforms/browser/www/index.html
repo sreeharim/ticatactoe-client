@@ -97,17 +97,17 @@
     <div class="spacer"></div>
 
     <ul class="list-group" ng-repeat="user in users | filter:query | orderBy: 'name' ">
-      <li class="list-group-item justify-content-between">{{user.name}}
-        <button class="btn btn-success">Play</button>
+      <li class="list-group-item justify-content-between" style="font-weight: bold">{{user.name}}
+        <button class="btn btn-success" ng-click="sendGameReq(user.name)">Play</button>
       </li>
     </ul>
  </div>
- <!-- Game request screen -->
+<!-- Game request screen -->
  <div id="reqScreen" ng-show="loggedIn && !isBiddingTime && reqScreen" >
   <div id="reqMsg" class="text-info"><h4>{{reqMsg}}</h4></div>
   <div class="container">
-    <button class="btn btn-success">Accept</button>
-    <button class="btn btn-danger">Decline</button>
+    <button class="btn btn-success" ng-click="sendReply(true)">Accept</button>
+    <button class="btn btn-danger" ng-click="sendReply(false)">Decline</button>
   </div>
  </div>
 

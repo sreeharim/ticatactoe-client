@@ -26,6 +26,7 @@ var app = angular.module("tttApp",[])
 					$scope.bidEnded= false;
 					$scope.gameOver = false;
 					$scope.reqScreen= false;
+					$scope.reqName ='';
 					$scope.reqMsg ='';
 					$scope.users=[];
 					$scope.socket.on('registered user',function(data){
@@ -50,14 +51,34 @@ var app = angular.module("tttApp",[])
 									$scope.message = "Choose a player";
 								 $scope.$apply();
 								});
+					$scope.socket.on('remove users',function(data){
+								for(var d in $scope.users)
+									if($scope.users[d].name == data.name1){
+										$scope.users.splice(d,1);
+										break;
+									}
+								for(var d in $scope.users)
+									if($scope.users[d].name == data.name2){
+										$scope.users.splice(d,1);
+										break;
+									}
+								 $scope.$apply();
+								});
 					$scope.socket.on('show users',function(data){
 								//$scope.message = "Choose a player";
 								$scope.connectToUser = true;
 								 $scope.$apply();
 								});
+					$scope.socket.on('declined req',function(data){
+								$scope.message = $scope.reqName+" rejected request:(";
+								 $scope.reqName=name;
+								 $scope.$apply();
+								});
+					
 					$scope.socket.on('opponent connected',function(data){
 								 console.log(data);
 								 $scope.opponentConnected = true;
+								 $scope.reqScreen = false;
 								 $scope.opponentDisConnected = false;
 								 $scope.opponent = data.pair;
 								 $scope.opponentCoins=data.pairCoins;
@@ -135,6 +156,7 @@ var app = angular.module("tttApp",[])
 						$scope.reqScreen= true;
 						$scope.connectToUser = false;
 						$scope.reqMsg = data+' requests a game.'
+						$scope.reqName = data;
 						$scope.message = '';
 						$scope.$apply();
 						//$scope.message = 'You won Bid';
@@ -176,8 +198,26 @@ var app = angular.module("tttApp",[])
     				$scope.sendGameReq =function(name){
     					$scope.socket.emit('send req',name);
     					$scope.connectToUser=false;
+    					$scope.reqName=name;
     					$scope.message = "Requesting "+name+" for a game..."
     					//$scope.reqScreen =true;
+    				}
+    				$scope.sendReply =function(accept){
+    					$scope.socket.emit('send resp',{'name':$scope.reqName ,'accept':accept});
+    					$scope.reqName='';
+    					if(!accept){
+    						$scope.connectToUser=true;
+    						$scope.reqScreen= false;
+    						if($scope.users.length == 0)	
+								$scope.message = "No users online :("
+							else
+								$scope.message = "Choose a player";
+    					}
+						else{
+							$scope.reqScreen= false;
+							$scope.connectToUser = false;
+							$scope.message=$scope.reqName+" connected";
+						}
     				}
     				function clearBoard(){
     					for(var row in $scope.gameBoard){
