@@ -14,7 +14,7 @@ var app = angular.module("tttApp",[])
 					$scope.myBid='';
 					$scope.mySubBid='';
 					$scope.oppSubtBid='';
-					$scope.message = "Waiting for an opponent...";
+					$scope.message = "";
 					$scope.socket =io.connect('http://192.168.0.4:3000');
 					$scope.name="";
 					$scope.opponentConnected = false;
@@ -45,10 +45,8 @@ var app = angular.module("tttApp",[])
 										break;
 									}
 								$scope.users = data;
-								if($scope.users.length == 0)	
-									$scope.message = "No users online :("
-								else
-									$scope.message = "Choose a player";
+								if($scope.connectToUser)
+								 	$scope.showUsers();	
 								 $scope.$apply();
 								});
 					$scope.socket.on('remove users',function(data){
@@ -62,24 +60,31 @@ var app = angular.module("tttApp",[])
 										$scope.users.splice(d,1);
 										break;
 									}
+								 if($scope.connectToUser)
+								 	$scope.showUsers();	
 								 $scope.$apply();
 								});
 					$scope.socket.on('show users',function(data){
 								//$scope.message = "Choose a player";
-								$scope.connectToUser = true;
-								 $scope.$apply();
+								$scope.showUsers();
+								$scope.$apply();
 								});
 					$scope.socket.on('declined req',function(data){
 								$scope.message = $scope.reqName+" rejected request:(";
-								 $scope.reqName=name;
+								 $scope.reqName='';
+								 $scope.opponentConnected =false;
+								 $scope.opponentDisConnected =false;
 								 $scope.$apply();
 								});
 					
 					$scope.socket.on('opponent connected',function(data){
 								 console.log(data);
+								 clearBoard();
 								 $scope.opponentConnected = true;
 								 $scope.reqScreen = false;
 								 $scope.opponentDisConnected = false;
+								 $scope.opponentLeft= false;
+								 $scope.gameOver = false;
 								 $scope.opponent = data.pair;
 								 $scope.opponentCoins=data.pairCoins;
 								 $scope.isMyTurn = data.turn;
@@ -94,6 +99,11 @@ var app = angular.module("tttApp",[])
 								$scope.opponentDisConnected = true;
 								$scope.message= data;
 								$scope.isBiddingTime=false;
+								$scope.$apply();
+					});
+					$scope.socket.on('opponent left',function(data){
+								$scope.opponentLeft= true;
+								$scope.message= data;
 								$scope.$apply();
 					});
 
@@ -153,8 +163,12 @@ var app = angular.module("tttApp",[])
 						$scope.$apply();
 					});	
 					$scope.socket.on('request game',function(data){
+						clearBoard();
 						$scope.reqScreen= true;
 						$scope.connectToUser = false;
+						$scope.gameOver = false;
+						$scope.opponentConnected=false;
+						$scope.opponentDisconnected=false;
 						$scope.reqMsg = data+' requests a game.'
 						$scope.reqName = data;
 						$scope.message = '';
@@ -167,6 +181,16 @@ var app = angular.module("tttApp",[])
         					$scope.gameBoard = $scope.updateGameBoard($scope.gameBoard,row,key,$scope.value);
         					if($scope.validMove)
 								$scope.socket.emit('submit move',$scope.gameBoard);
+    						}
+    				$scope.showUsers = function() {
+    						$scope.opponentConnected=false;
+							$scope.opponentDisconnected=false;
+							$scope.gameOver=false;
+							if($scope.users.length == 0)	
+								$scope.message = "No players available :("
+							else
+								$scope.message = "Choose a player";
+							$scope.connectToUser = true;
     						}
     				$scope.updateGameBoard = function(gameBoard, row, key,val){
     					for(var gameRow in gameBoard)
@@ -183,22 +207,27 @@ var app = angular.module("tttApp",[])
     				$scope.clearErr = function(){
     					$scope.invalidUsrMsg='';
     				}
-    				$scope.newGame = function(){
+    				$scope.endGame = function(){
     					clearBoard();
     					$scope.gameOver = false;
-    					$scope.socket.emit('new game','');
-    					$scope.message = "Waiting for an opponent...";
     					$scope.opponentConnected = false;
-						$scope.opponentDisConnected = false;	
+						$scope.opponentDisConnected = false;
+						$scope.socket.emit('end game','');	
     				}
     				$scope.submitBid = function(){
     					$scope.socket.emit('submit bid',$scope.myBid);
     					$scope.isBidSubmitted = true;
     				}
     				$scope.sendGameReq =function(name){
+    					clearBoard();
     					$scope.socket.emit('send req',name);
     					$scope.connectToUser=false;
     					$scope.reqName=name;
+    					$scope.message = "Requesting "+name+" for a game..."
+    					//$scope.reqScreen =true;
+    				}
+    				$scope.tryAgain =function(){
+    					$scope.socket.emit('send req',$scope.opponent);
     					$scope.message = "Requesting "+name+" for a game..."
     					//$scope.reqScreen =true;
     				}
@@ -208,14 +237,17 @@ var app = angular.module("tttApp",[])
     					if(!accept){
     						$scope.connectToUser=true;
     						$scope.reqScreen= false;
+    						$scope.opponentConnected = false;
     						if($scope.users.length == 0)	
 								$scope.message = "No users online :("
 							else
 								$scope.message = "Choose a player";
     					}
 						else{
+							clearBoard();
 							$scope.reqScreen= false;
 							$scope.connectToUser = false;
+							$scope.gameOver = false;
 							$scope.message=$scope.reqName+" connected";
 						}
     				}

@@ -61,7 +61,8 @@
     </table>
     <div class="spacer"></div>
     <div class="spacer"></div>
-    <button id="newGame" class="btn btn-success btn-block" ng-click="newGame()" ng-show="opponentDisConnected || gameOver">New Game</button> 
+    <button id="playAgain" class="btn btn-success btn-block" ng-click="sendGameReq(opponent)" ng-show="gameOver && !opponentLeft">Play Again</button>
+    <button id="newGame" class="btn btn-success btn-block" ng-click="endGame()" ng-show="opponentDisConnected || gameOver">New Game</button> 
  </div>
  <!-- Bidding Board-->
  <div id="biddingArea" class="login" ng-show="loggedIn && isBiddingTime && !connectToUser" >

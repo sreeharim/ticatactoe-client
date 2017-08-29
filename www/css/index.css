@@ -47,6 +47,11 @@
     position: relative;
     left: 25%;
 }
+#playAgain{
+    width:120px;
+    position: relative;
+    left: 25%;
+}
 .halfspacer{
     height:10px;
 }
