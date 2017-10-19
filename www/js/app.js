@@ -29,6 +29,7 @@ var app = angular.module("tttApp",[])
 					$scope.reqName ='';
 					$scope.reqMsg ='';
 					$scope.users=[];
+					$scope.requesting=false;
 					$scope.socket.on('registered user',function(data){
 								console.log(data);
 								$scope.loggedIn = true;
@@ -74,6 +75,7 @@ var app = angular.module("tttApp",[])
 								 $scope.reqName='';
 								 $scope.opponentConnected =false;
 								 $scope.opponentDisConnected =false;
+								 $scope.requesting=false;
 								 $scope.$apply();
 								});
 					
@@ -84,6 +86,7 @@ var app = angular.module("tttApp",[])
 								 $scope.reqScreen = false;
 								 $scope.opponentDisConnected = false;
 								 $scope.opponentLeft= false;
+								 $scope.requesting=false;
 								 $scope.gameOver = false;
 								 $scope.opponent = data.pair;
 								 $scope.opponentCoins=data.pairCoins;
@@ -103,6 +106,7 @@ var app = angular.module("tttApp",[])
 					});
 					$scope.socket.on('opponent left',function(data){
 								$scope.opponentLeft= true;
+								$scope.requesting=false;
 								$scope.message= data;
 								$scope.$apply();
 					});
@@ -175,7 +179,11 @@ var app = angular.module("tttApp",[])
 						$scope.$apply();
 						//$scope.message = 'You won Bid';
 					});	
-
+					$scope.socket.on('cancelling req',function(data){
+						$scope.connectToUser=true;
+    					$scope.reqScreen= false;
+    					$scope.opponentConnected = false;
+					});
 					$scope.submitChange = function(row,key) {
 							$scope.validMove = false;
         					$scope.gameBoard = $scope.updateGameBoard($scope.gameBoard,row,key,$scope.value);
@@ -222,6 +230,7 @@ var app = angular.module("tttApp",[])
     					clearBoard();
     					$scope.socket.emit('send req',name);
     					$scope.connectToUser=false;
+    					$scope.requesting=true;
     					$scope.reqName=name;
     					$scope.message = "Requesting "+name+" for a game..."
     					//$scope.reqScreen =true;
@@ -250,6 +259,10 @@ var app = angular.module("tttApp",[])
 							$scope.gameOver = false;
 							$scope.message=$scope.reqName+" connected";
 						}
+    				}
+    				$scope.cancelReq=function(name){
+    					$scope.requesting=false;
+    					$scope.socket.emit('cancel req',name);
     				}
     				function clearBoard(){
     					for(var row in $scope.gameBoard){

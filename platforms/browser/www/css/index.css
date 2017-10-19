@@ -52,6 +52,18 @@
     position: relative;
     left: 25%;
 }
+#cancelReq{
+    width:120px;
+    position: relative;
+    left: 25%;
+}
+#ruleIcon{
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  left: 50%;
+  top: 90%;
+}
 .halfspacer{
     height:10px;
 }
