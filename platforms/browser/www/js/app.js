@@ -4,6 +4,12 @@ var app = angular.module("tttApp",[])
 									 {zero:'',one:'',two:'',id:'r2'},
 									 {zero:'',one:'',two:'',id:'r3'}
 									];
+					$scope.rules = ['Both players start off with 100 coins',
+									'For each move, the players submit a silent bid',
+									'The player who made the highest bid gets the chance to play',
+									'The player who lost the bid gets the difference of bid coins',
+                                    'If the game ends in a tie, the number of coins will determine the winner'] 
+                    $scope.showRules = false;                
 					$scope.gameBoard = gameBoard;
 					$scope.isMyTurn = false;
 					$scope.loggedIn = false;
@@ -15,7 +21,8 @@ var app = angular.module("tttApp",[])
 					$scope.mySubBid='';
 					$scope.oppSubtBid='';
 					$scope.message = "";
-					$scope.socket =io.connect('https://powerful-journey-47434.herokuapp.com/');
+					//$scope.socket =io.connect('https://powerful-journey-47434.herokuapp.com/');
+					$scope.socket =io.connect('http://192.168.0.4:3000');
 					$scope.name="";
 					$scope.opponentConnected = false;
 					$scope.opponentDisConnected = false;
@@ -263,6 +270,9 @@ var app = angular.module("tttApp",[])
     				$scope.cancelReq=function(name){
     					$scope.requesting=false;
     					$scope.socket.emit('cancel req',name);
+    				}
+    				$scope.showHideRules=function(){
+    					$scope.showRules = !$scope.showRules;
     				}
     				function clearBoard(){
     					for(var row in $scope.gameBoard){
