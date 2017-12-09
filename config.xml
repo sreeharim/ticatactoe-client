@@ -41,4 +41,5 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <plugin name="cordova-plugin-dialogs" spec="~1.2.1" />
 </widget>
