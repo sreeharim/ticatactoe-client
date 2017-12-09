@@ -21,8 +21,8 @@ var app = angular.module("tttApp",[])
 					$scope.mySubBid='';
 					$scope.oppSubtBid='';
 					$scope.message = "";
-					//$scope.socket =io.connect('https://powerful-journey-47434.herokuapp.com/');
-					$scope.socket =io.connect('http://192.168.0.4:3000');
+					$scope.socket =io.connect('https://powerful-journey-47434.herokuapp.com/');
+					//$scope.socket =io.connect('http://192.168.0.4:3000');
 					$scope.name="";
 					$scope.opponentConnected = false;
 					$scope.opponentDisConnected = false;
@@ -274,6 +274,23 @@ var app = angular.module("tttApp",[])
     				$scope.showHideRules=function(){
     					$scope.showRules = !$scope.showRules;
     				}
+    				$scope.init=function(){
+    					document.addEventListener("deviceready", onDeviceReady, false);
+    				}
+    				function onDeviceReady(){
+    					document.addEventListener("backbutton", onBackKeyDown, false);
+					}
+					function onBackKeyDown(e){
+						  e.preventDefault();
+    					  navigator.notification.confirm("Are you sure you want to exit?", onConfirm, "", "Yes,No"); 
+					}
+					function onConfirm(button) {
+    					if(button==2){//If User selected No, then we just do nothing
+        					return;
+    					}else{
+        					navigator.app.exitApp();// Otherwise we quit the app.
+    				}
+}
     				function clearBoard(){
     					for(var row in $scope.gameBoard){
     						$scope.gameBoard[row].zero='';
