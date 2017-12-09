@@ -113,7 +113,7 @@
     <button class="btn btn-danger" ng-click="sendReply(false)">Decline</button>
   </div>
  </div>
- <div id="ruleIconDiv" ng-show="!showRules" ng-click="showHideRules()">
+ <div id="ruleIconDiv" ng-show="!loggedIn && !showRules" ng-click="showHideRules()">
     <img id="ruleIcon" src="img/rules.png">
  </div>
  <div id="rulesScreen" class="rules" ng-show="showRules">
