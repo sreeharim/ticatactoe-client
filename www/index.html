@@ -15,19 +15,21 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
-<!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />  -->  
+<!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />    -->
 </head>
 
 <body ng-controller="tttController" ng-app="tttApp" data-ng-init="init()">
 <!-- Login Form -->
 <div id="login" class="login" ng-show="!loggedIn">
+ <div id="loading" class="blink text-warning" ng-show="loading">Loading...</div>
+    <div class="spacer"></div>
     <form ng-submit="enterGame();">
         <input type="text" class="form-control" ng-click="clearErr();" maxlength="10" ng-model="name" placeholder="Nickname..." required="" autofocus=""/>
 
         <div class="text-danger err">{{invalidUsrMsg}}</div>
         <div class="halfspacer"></div>
         
-        <button class="btn btn-success btn-block" type="submit">Play</button> 
+        <button class="btn btn-success btn-block" ng-disabled="loading" type="submit">Play</button> 
     </form> 
 </div>
 <!-- Coins scoreCard -->
@@ -113,7 +115,7 @@
     <button class="btn btn-danger" ng-click="sendReply(false)">Decline</button>
   </div>
  </div>
- <div id="ruleIconDiv" ng-show="!connectToUser && !showRules" ng-click="showHideRules()">
+ <div id="ruleIconDiv" ng-show="!connectToUser && !showRules && !gameOver && !opponentDisConnected && !requesting" ng-click="showHideRules()">
     <img id="ruleIcon" src="img/rules.png">
  </div>
  <div id="rulesScreen" class="rules" ng-show="showRules">

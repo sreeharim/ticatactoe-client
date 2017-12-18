@@ -33,12 +33,14 @@ var app = angular.module("tttApp",[])
 					$scope.bidEnded= false;
 					$scope.gameOver = false;
 					$scope.reqScreen= false;
+					$scope.loading = false;
 					$scope.reqName ='';
 					$scope.reqMsg ='';
 					$scope.users=[];
 					$scope.requesting=false;
 					$scope.socket.on('registered user',function(data){
-								console.log(data);
+								//console.log(data);
+								$scope.loading  = false;
 								$scope.loggedIn = true;
 								$scope.$apply();
 								});
@@ -217,6 +219,7 @@ var app = angular.module("tttApp",[])
 							return gameBoard;	
     				}
     				$scope.enterGame = function(){
+    					$scope.loading = true;
     					$scope.socket.emit('register',$scope.name);
     				}
     				$scope.clearErr = function(){

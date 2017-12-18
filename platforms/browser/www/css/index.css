@@ -93,7 +93,7 @@
   animation-direction: alternate;
 
 }
-#console {
+#console,#loading {
   position:relative;
   text-align: center;
   font-size: 20px;
